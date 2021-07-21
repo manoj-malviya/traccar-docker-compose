@@ -1,0 +1,28 @@
+version: '3.6'
+services: 
+
+ mysql:
+  image: mysql:latest
+  restart: always
+  environment:
+   - MYSQL_USER=traccar
+   - MYSQL_PASSWORD=MyDBPassword
+   - MYSQL_DATABASE=traccar
+   - MYSQL_RANDOM_ROOT_PASSWORD=1
+  volumes:
+   - mysql:/var/lib/mysql/
+
+ traccar:
+  image: traccar/traccar:latest
+  depends_on:
+   - mysql
+  restart: always
+  ports:
+   - "5000-5150:5000-5150/tcp"
+   - "5000-5150:5000-5150/udp"
+   - "8082:8082"
+  volumes:
+   - ./config/traccar.xml:/opt/traccar/conf/traccar.xml
+
+volumes:
+ mysql:
